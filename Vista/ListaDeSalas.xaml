@@ -1,0 +1,46 @@
+<UserControl x:Class="Chat.Vista.ListaDeSalas"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+   
+        <Grid >
+          
+            <StackPanel Orientation="Vertical" Grid.Row="0" Grid.Column="0" Margin ="0 0 0 5" >
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Label  Content="GAB_1700" FontSize="20"  />
+                    <Label  Content="AVATAR" FontSize="20"  />
+                    <Image Source="Imagenes/5834524.png"/>
+                    
+                </StackPanel>
+                <Label  Content="LISTA DE SALAS" FontSize="20" HorizontalAlignment="Center" />
+                <Label   FontSize="20" HorizontalAlignment="Center" />
+                <TextBlock Text=" "/>
+
+               
+                <ListView x:Name="Salas">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding Nombre}" Margin="5" />
+                                <TextBlock Text="{Binding Capacidad}" Margin="5" />
+                                <TextBlock Text="{Binding Visibility}" Margin="5" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+
+                
+                
+
+                <TextBlock Text=" "/>
+                <TextBlock Text=" "/>
+                <Button FontSize="20" Content="CREAR SALA" HorizontalAlignment="Right" Background="Green" Foreground="White"  />
+            </StackPanel>
+          
+               
+        </Grid>
+
+</UserControl>
