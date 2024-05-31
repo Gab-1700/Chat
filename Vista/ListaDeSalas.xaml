@@ -10,7 +10,7 @@
           
             <StackPanel Orientation="Vertical" Grid.Row="0" Grid.Column="0" Margin ="0 0 0 5" >
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                    <Label  Content="GAB_1700" FontSize="20"  />
+                    <Label  Content="{Binding Usuario.Nombre}" FontSize="20"  />
                     <Label  Content="AVATAR" FontSize="20"  />
                     <Image Source="Imagenes/5834524.png"/>
                     
@@ -33,11 +33,10 @@
                 </ListView>
 
                 
-                
 
                 <TextBlock Text=" "/>
                 <TextBlock Text=" "/>
-                <Button FontSize="20" Content="CREAR SALA" HorizontalAlignment="Right" Background="Green" Foreground="White"  />
+                <Button FontSize="20" Content="CREAR SALA" HorizontalAlignment="Right" Background="Green" Foreground="White" Click="CrearSala"  />
             </StackPanel>
           
                

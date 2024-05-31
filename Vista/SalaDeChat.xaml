@@ -10,22 +10,22 @@
           
             <StackPanel Orientation="Vertical" Grid.Row="0" Grid.Column="0" Margin ="0 0 0 5" >
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" >
-                    <Label  Content="GAB-1700" FontSize="20"  />
+                    <Label  Content="{Binding Usuario.Nombre}" FontSize="20"  />
                     <Label  Content="AVATAR" FontSize="20"  />
                 </StackPanel>
                 <TextBlock Text=" "/>
 
                  <StackPanel Orientation="Horizontal"  >
-                    <Label  Content="SALA 1 CHAT" FontSize="20" Margin="0 0 400 0"  />
-                    <Button  Content="EDITAR" FontSize="20"  Margin="0 0 20 0" Background="White" Foreground="Black"/>
-                    <Button  Content="CERRAR" FontSize="20"  HorizontalAlignment="Right"  Background="RED" Foreground="White"/>
+                    <Label  Content="{Binding Sala.Nombre}" FontSize="20" Margin="0 0 400 0"  />
+                    <Button  Content="EDITAR" FontSize="20"  Margin="0 0 20 0" Background="White" Foreground="Black" Click="EditarSala"/>
+                    <Button  Content="CERRAR" FontSize="20"  HorizontalAlignment="Right"  Background="RED" Foreground="White" Click="CerrarSala"/>
                 </StackPanel>
                 
                 <TextBlock Text=" "/>
 
              
              <StackPanel Orientation="Horizontal "> 
-                <ListView x:Name="Chat" Width="500" Height="200" Margin="0 0 20 0">
+                <ListView Width="500" Height="200" Margin="0 0 20 0" ItemsSource="{Binding Mensajes, Mode=TwoWay}">
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
@@ -37,7 +37,7 @@
                         </ListView.ItemTemplate>
                 </ListView>
 
-                <ListView x:Name="Usuarios" Width="200" Height="200"  >
+                <ListView  Width="200" Height="200" ItemsSource="{Binding Usuarios, Mode=TwoWay}" >
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
@@ -53,12 +53,12 @@
             <TextBlock Text=" "/>
              <StackPanel Orientation="Horizontal">
                 <Border BorderBrush="black" BorderThickness="1" Height="50" Width="400" Margin ="0 0 20 5" HorizontalAlignment="Right" >
-                    <StackPanel >
-                        <TextBox Height="50" FontSize="20" />
+                    
+                        <TextBox x:Name="TxtMensaje" Height="50" FontSize="20" />
                         
-                    </StackPanel>
+                    
                 </Border>
-                <Button Content="ENVIAR" FontSize="20" Background="Orange" Foreground="White"/>
+                <Button Content="ENVIAR" FontSize="20" Background="Orange" Foreground="White" Click="EnviarMensaje"/>
                         
              </StackPanel>
 

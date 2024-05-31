@@ -13,7 +13,7 @@ public class MainWindowVM : INotifyPropertyChanged
         set
         {
             _vistaActual = value;
-            PropertyChanged.Invoke(this, new PropertyChangedEventArgs("VistaActual"));
+            PropertyChanged.Invoke(this, new PropertyChangedEventArgs(nameof(VistaActual)));
         }
 
     }

@@ -13,15 +13,13 @@ public partial class RegistroDeUsuario : UserControl
     public RegistroDeUsuario()
     {
         InitializeComponent();
-        Usuario = new Usuario(){
-            Nombre="Pepe",Color=Colors.Blue
-        };
+        Usuario = new Usuario();
         DataContext = Usuario;
 
     }
 
     public void GuardarUsuario(object sender, RoutedEventArgs e)
     {
-            ((Parent as FrameworkElement).DataContext as MainWindowVM).VistaActual  = new SalaDeChat();
+        ((Parent as FrameworkElement).DataContext as MainWindowVM).VistaActual = new ListaDeSalas{Usuario=Usuario};
     }
 }
