@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using Chat.Modelo;
 using Chat.VistaModelo;
@@ -12,7 +13,10 @@ public partial class SalaDeChat : UserControl
     public ObservableCollection<Usuario> Usuarios { get; set; }
     public Usuario Usuario { get; set; }
     public Sala Sala { get; set; }
-    public SalaDeChat(Usuario usuario)
+    public ICommand NavegacionARegistroDeUsuario { get; set; }
+    public ICommand NavegacionAListaDeSalas { get; set; }
+    public ICommand NavegacionACrearSalaDeChat { get; set; }
+    public SalaDeChat()
     {
         InitializeComponent();
 
@@ -23,12 +27,12 @@ public partial class SalaDeChat : UserControl
 
         //Salas.ItemsSource=salas;
         //Chat
-        Usuario=usuario;
+        // Usuario=usuario;
 
-        Usuarios = new ObservableCollection<Usuario> { Usuario  };
+        Usuarios = new ObservableCollection<Usuario> { Usuario };
         //Usuarios = new ObservableCollection<Usuario>();
         //Usuarios.Add(Usuario);
-        
+
         DataContext = this;
     }
     public void EnviarMensaje(object sender, RoutedEventArgs e)
@@ -38,13 +42,4 @@ public partial class SalaDeChat : UserControl
         TxtMensaje.Text = "";
     }
 
-    public void CerrarSala(object sender, RoutedEventArgs e)
-    {
-        ((Parent as FrameworkElement).DataContext as MainWindowVM).VistaActual = new ListaDeSalas { Usuario = Usuario };
-    }
-
-    public void EditarSala(object sender, RoutedEventArgs e)
-    {
-        ((Parent as FrameworkElement).DataContext as MainWindowVM).VistaActual = new CrearSala(Sala) { Usuario = Usuario };
-    }
 }

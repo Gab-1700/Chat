@@ -19,14 +19,17 @@
             <ColumnDefinition Width="3*"/>
         </Grid.ColumnDefinitions>
 
-        <Label Grid.Row ="0" Grid.Column="0" Content="DEFINIR USUARIO" Grid.ColumnSpan="2" FontSize="30" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
+        <Label  Content="DEFINIR USUARIO" Grid.ColumnSpan="2" FontSize="30" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
         <Label Grid.Row ="1" Grid.Column="0" Content="NOMBRE" FontSize="25" HorizontalContentAlignment="Left"  />       
-        <TextBox Grid.Row ="1" Grid.Column="1"  FontSize="30" Margin="0 0 0 10" Text="{Binding Nombre}" />   
+        <TextBox Grid.Row ="1" Grid.Column="1"  FontSize="30" Margin="0 0 0 10" Text="{Binding Usuario.Nombre}" />   
         <Label Grid.Row ="2" Grid.Column="0" Content="AVATAR" FontSize="25" HorizontalContentAlignment="Left"  />  
         <TextBox Grid.Row ="2" Grid.Column="1"  FontSize="25" Margin="0 0 0 10" />  
         <Label Grid.Row ="3" Grid.Column="0" Content="COLOR" FontSize="25" HorizontalContentAlignment="Left"  />  
-        <xctk:ColorPicker Grid.Row="3" Grid.Column="1" Margin="0 0 0 10" SelectedColor="{Binding Color}" />
-        <Button Grid.Row="4" Content="GUARDAR" Grid.Column="0" Click="GuardarUsuario" Grid.ColumnSpan="2" />
+        <xctk:ColorPicker Grid.Row="3" Grid.Column="1" Margin="0 0 0 10" SelectedColor="{Binding Usuario.Color}" />
+
+       
+        <Button Grid.Row="4" Content="GUARDAR" Grid.Column="0" Command="{Binding NavegacionAListaDeSalas}" Grid.ColumnSpan="2" /> 
+        
 
     </Grid>
 

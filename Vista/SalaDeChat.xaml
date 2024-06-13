@@ -17,8 +17,8 @@
 
                  <StackPanel Orientation="Horizontal"  >
                     <Label  Content="{Binding Sala.Nombre}" FontSize="20" Margin="0 0 400 0"  />
-                    <Button  Content="EDITAR" FontSize="20"  Margin="0 0 20 0" Background="White" Foreground="Black" Click="EditarSala"/>
-                    <Button  Content="CERRAR" FontSize="20"  HorizontalAlignment="Right"  Background="RED" Foreground="White" Click="CerrarSala"/>
+                    <Button  Content="EDITAR" FontSize="20"  Margin="0 0 20 0" Background="White" Foreground="Black" Command="{Binding NavegacionACrearSalaDeChat}"/>
+                    <Button  Content="CERRAR" FontSize="20"  HorizontalAlignment="Right"  Background="RED" Foreground="White" Command="{Binding NavegacionAListaDeSalas}"/>
                 </StackPanel>
                 
                 <TextBlock Text=" "/>

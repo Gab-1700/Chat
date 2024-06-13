@@ -32,11 +32,12 @@
                     </ListView.ItemTemplate>
                 </ListView>
 
-                
+               <Button Content="EDITAR" FontSize="20"  Margin="0 0 20 0" Background="White" Foreground="Black" Command="{Binding NavegacionARegistroDeUsuario}"/> 
+                <Button Content="VOLVER" FontSize="20"  HorizontalAlignment="Left" Background="Pink"  Foreground="White" Command="{Binding NavegacionARegistroDeUsuario}"/>
 
                 <TextBlock Text=" "/>
                 <TextBlock Text=" "/>
-                <Button FontSize="20" Content="CREAR SALA" HorizontalAlignment="Right" Background="Green" Foreground="White" Click="CrearSala"  />
+                <Button FontSize="20" Content="CREAR SALA" HorizontalAlignment="Right" Background="Green" Foreground="White" Command="{Binding NavegacionACrearSala}"  />
             </StackPanel>
           
                

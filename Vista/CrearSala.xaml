@@ -12,7 +12,7 @@
                <Label  Content="CREAR SALA" FontSize="20" HorizontalAlignment="Center" />  
                <TextBlock Text=" "/>
                <Label  Content="NOMBRE DE LA SALA" FontSize="20" HorizontalAlignment="Left" /> 
-               <TextBox  Text="{Binding Nombre}" FontSize="20" HorizontalAlignment="Left" Width="200" Height="30" />
+               <TextBox  Text="{Binding Sala.Nombre}" FontSize="20" HorizontalAlignment="Left" Width="200" Height="30" />
                <TextBlock Text=" "/>
 
                 <StackPanel Orientation="Horizontal" >
@@ -21,15 +21,15 @@
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal" >
-                    <TextBox  Text="{Binding Capacidad }" FontSize="20" HorizontalAlignment="Left" Width="200" Height="30" Margin="0 0 100 0" />
+                    <TextBox  Text="{Binding Sala.Capacidad }" FontSize="20" HorizontalAlignment="Left" Width="200" Height="30" Margin="0 0 100 0" />
                     
-                    <TextBox  Text="{Binding Contraseña }" FontSize="20" HorizontalAlignment="Right" Width="200" Height="30" />
+                    <TextBox  Text="{Binding Sala.Contraseña }" FontSize="20" HorizontalAlignment="Right" Width="200" Height="30" />
                 </StackPanel>
         
                 <TextBlock Text=" "/>
 
                 <Label Content="VISIBILIDAD"/>
-                <ComboBox FontSize="20" SelectedItem="{Binding Visibilidad}" >
+                <ComboBox FontSize="20" SelectedItem="{Binding Sala.Visibilidad}" >
                     <ComboBoxItem Content="Publico" IsSelected="True"/>
                     <ComboBoxItem Content="Privado"/>
                 </ComboBox>
@@ -37,8 +37,8 @@
                 <TextBlock Text=" "/>
 
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" >
-                    <Button FontSize="20" Content="GUARDAR" HorizontalAlignment="Left" Background="Blue" Foreground="White" Margin="0 0 50 0" Click="GuardarSala" />
-                    <Button FontSize="20" Content="CANCELAR" HorizontalAlignment="Right" Background="White" Foreground="Black" Click="CancelarSala"  />
+                    <Button FontSize="20" Content="GUARDAR" HorizontalAlignment="Left" Background="Blue" Foreground="White" Margin="0 0 50 0" Command="{Binding NavegacionASalaDeChat}" />
+                    <Button FontSize="20" Content="CANCELAR" HorizontalAlignment="Right" Background="White" Foreground="Black" Command="{Binding NavegacionAListaDeSalas}"/>
                 </StackPanel>
                 
                
