@@ -3,9 +3,10 @@ using System.Windows.Input;
 
 namespace Chat.VistaModelo;
 
-public class ComandoDeNavegacion : ICommand
+public class Comando : ICommand
 {
-    private Action _action;
+    private readonly Action<object?>  _execute;
+    private readonly Func<bool>? _canExecute;
 
     public event EventHandler? CanExecuteChanged
     {
@@ -13,20 +14,20 @@ public class ComandoDeNavegacion : ICommand
         remove { CommandManager.RequerySuggested -= value; }
     }
 
-    public ComandoDeNavegacion(Action action)
+    public Comando(Action<object?> execute, Func<bool>? canExecute = null )
     {
-        _action = action;
+        _canExecute = canExecute;
+        _execute = execute;
     }
 
     public bool CanExecute(object? parameter)
     {
-        return _action != null;
+        return _canExecute == null || _canExecute();
 
     }
 
     public void Execute(object? parameter)
     {
-        _action();
-        //46
+        _execute(parameter);
     }
 }

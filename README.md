@@ -20,4 +20,14 @@
     * las salas privadas deben tener contraseña
     * debe haber la posibilidad de salirse de una sala
     
+
+
+
+
+
+
+    // pendiente puedo guardar mensajes vacios? boton de enviar debe estar asociado a un comand 
+    mensajes  que escribo deben estar asociados al Usuario q cree en registro de usuario
+    lista de usuarios , debe mostrar al usuario que yo soy el (admin)
+
     

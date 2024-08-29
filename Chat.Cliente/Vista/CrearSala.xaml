@@ -37,8 +37,8 @@
                 <TextBlock Text=" "/>
 
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" >
-                    <Button FontSize="20" Content="GUARDAR" HorizontalAlignment="Left" Background="Blue" Foreground="White" Margin="0 0 50 0" Command="{Binding NavegacionASalaDeChat}" />
-                    <Button FontSize="20" Content="CANCELAR" HorizontalAlignment="Right" Background="White" Foreground="Black" Command="{Binding NavegacionAListaDeSalas}"/>
+                    <Button FontSize="20" Content="GUARDAR" HorizontalAlignment="Left" Background="Blue" Foreground="White" Margin="0 0 50 0" Command="{Binding AbrirSalaDeChat}" CommandParameter="{Binding Sala}"  />
+                    <Button FontSize="20" Content="CANCELAR" HorizontalAlignment="Right" Background="White" Foreground="Black" Command="{Binding AbrirListaDeSalas}"/>
                 </StackPanel>
                 
                

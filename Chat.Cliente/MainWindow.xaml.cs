@@ -1,4 +1,7 @@
-﻿using System.Windows;
+﻿using System.Collections.ObjectModel;
+using System.Windows;
+using System.Windows.Input;
+using Chat.Modelo;
 using Chat.Vista;
 using Chat.VistaModelo;
 
@@ -10,11 +13,11 @@ namespace Chat;
 /// 
 public partial class MainWindow : Window
 {
-    private MainWindowVM _mainWindowVM;
+
     public MainWindow()
     {
-        InitializeComponent();
-        _mainWindowVM = new MainWindowVM();
-        DataContext = _mainWindowVM;
+        InitializeComponent();  
+        DataContext = new MainWindowVM();   
+        
     }
 }
