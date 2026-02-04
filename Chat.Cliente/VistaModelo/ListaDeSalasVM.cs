@@ -1,50 +1,50 @@
 using System.Windows.Input;
 using System.Windows;
 using System.Windows.Controls;
-using Chat.Modelo;
+using Chat.Base.Modelo;
 using System.Collections.ObjectModel;
+using Chat.Cliente.Comandos;
+using Microsoft.AspNetCore.SignalR.Client;
 
-namespace Chat.VistaModelo;
+namespace Chat.Cliente.VistaModelo;
 
-public class ListaDeSalasVM :BaseVM{
-     public ObservableCollection<Sala> Salas { get; set; }
+public class ListaDeSalasVM : BaseVM
+{
+    public ObservableCollection<Sala> Salas { get; set; }
     public Usuario Usuario { get; set; }
-    public ICommand NavegacionACrearSala { get; set; }
-
-    public ICommand NavegacionASalaDeChat { get; set; }
-    public ICommand NavegacionARegistroDeUsuario { get; set; }
-    public ICommand AbrirSalaDeChat { get; set; }
-    public ICommand AbrirCrearSalaDeChat {get; set; }
-    public ICommand AbrirRegistroDeUsuario {get; set; }
-    public ICommand navegar { get; set; }
-
+    public ICommand AbrirSalaDeChat { get; private set; }
+    public ICommand AbrirCrearSalaDeChat { get; private set; }
+    public ICommand AbrirRegistroDeUsuario { get; private set; }
 
     // algo por revisar
-    public ListaDeSalasVM(ICommand abrirCrearSalaDeChat,ICommand abrirSalaDeChat , ICommand abrirRegistroDeUsuario){
-        AbrirCrearSalaDeChat = abrirCrearSalaDeChat;
-        AbrirSalaDeChat = abrirSalaDeChat;
+    public ListaDeSalasVM(AbrirRegistroDeUsuario abrirRegistroDeUsuario, AbrirCrearSala abrirCrearSala, AbrirSalaDeChat abrirSalaDeChat, HubConnection conexion, RegistroDeUsuarioVM registroDeUsuarioVM)
+    {
         AbrirRegistroDeUsuario = abrirRegistroDeUsuario;
+        AbrirCrearSalaDeChat = abrirCrearSala;
+        AbrirSalaDeChat = new Comando((sala) =>
+        {
+            conexion.InvokeAsync("UnirASala", (sala as Sala).Id, registroDeUsuarioVM.Usuario);
+            abrirSalaDeChat.Execute(sala);
+        });
 
         Salas = new ObservableCollection<Sala>();
-       // navegar = new Comando(_ => abrirCrearSalaDeChat.Execute(_),() => abrirCrearSalaDeChat.CanExecute(null) );
+        conexion.On<List<Sala>>("RecibirSala", ActualizarSalas);   // recibo la sala del servidor como string  y lo agrego ami lista de salas 
+
     }
 
-    public void AgregarSala(string nombre)
+    private void ActualizarSalas(List<Sala> salas)
     {
         Application.Current.Dispatcher.Invoke(() =>
         {
-            Salas.Add(new Sala { Nombre = nombre });
+            Salas.Clear();
+            salas.ForEach(s => Salas.Add(s));
         });
     }
 
-    public void SeleccionarSala(object sender, MouseEventArgs e)
+    public void EnviarUsuario()
     {
 
-        var salaActual = sender as ListView;
-        var salaSeleccionada = salaActual.SelectedItem as Sala;
 
-            NavegacionASalaDeChat.Execute(salaSeleccionada);
-    
     }
 
 }

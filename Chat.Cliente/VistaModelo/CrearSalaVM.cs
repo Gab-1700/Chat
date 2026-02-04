@@ -1,11 +1,10 @@
 using System.Windows.Input;
-using System.Windows.Controls;
-using System.Windows.Documents;
+using Chat.Cliente.Comandos;
+using Chat.Base.Modelo;
+using Microsoft.AspNetCore.SignalR.Client;
+using System.Windows;
 
-using Chat.Modelo;
-using Xceed.Wpf.Toolkit.PropertyGrid.Converters;
-using Microsoft.VisualBasic;
-namespace Chat.VistaModelo;
+namespace Chat.Cliente.VistaModelo;
 
 public class CrearSalaVM : BaseVM
 {
@@ -13,24 +12,28 @@ public class CrearSalaVM : BaseVM
 
     public Usuario Usuario { get; set; }
 
-    public ICommand AbrirSalaDeChat { get; set; }
-    public ICommand AbrirListaDeSalas { get; set; }
+    public ICommand AbrirSalaDeChat { get; private set; }
+    public ICommand AbrirListaDeSalas { get; private set; }
 
 
-    public CrearSalaVM(ICommand abriSalaDeChat, ICommand abrirListaDeSalas)
+    public CrearSalaVM(AbrirListaDeSalas abrirListaDeSalas, AbrirSalaDeChat abrirSalaDeChat, HubConnection conexion)
     {
         // navegar = new Comando(_ => abriSalaDeChat.Execute(_),PuedesNavegar);
         AbrirListaDeSalas = abrirListaDeSalas;
-        AbrirSalaDeChat = new Comando(modelo =>
+        AbrirSalaDeChat = new Comando(_ =>
         {
-            // serviro creee sala con ese nombre 
-            
-            abriSalaDeChat.Execute(modelo);
+            conexion.InvokeAsync("CargarSala", Sala);
+            abrirSalaDeChat.Execute(Sala);
         }, PuedesNavegar);
-         //_conection.InvokeAsync("EnviarSala",Sala.Nombre);
         Sala = new Sala();
+        conexion.On<int>("GuardarSalaId", (salaId) =>
+        {
+            Application.Current.Dispatcher.Invoke(() => Sala.Id = salaId);
+        });
 
     }
+
+
     public bool PuedesNavegar()
     {
         return !(Sala.Nombre == null || Sala.Nombre == "");

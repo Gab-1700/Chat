@@ -4,11 +4,11 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
-             xmlns:conversores="clr-namespace:Chat.Conversores"
+             xmlns:conversores="clr-namespace:Chat.Cliente.Conversores"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
-         <conversores:ConversorDeColor x:Key="Conversor" />
+         <conversores:ConversorColor x:Key="CColor" />
     </UserControl.Resources>
     <Grid Margin="50 30 50 30">
         <Grid.RowDefinitions>
@@ -29,7 +29,7 @@
         <Label Grid.Row ="2" Grid.Column="0" Content="AVATAR" FontSize="25" HorizontalContentAlignment="Left"  />  
         <TextBox Grid.Row ="2" Grid.Column="1"  FontSize="25" Margin="0 0 0 10" />  
         <Label Grid.Row ="3" Grid.Column="0" Content="COLOR" FontSize="25" HorizontalContentAlignment="Left"  />  
-        <xctk:ColorPicker Grid.Row="3" Grid.Column="1" Margin="0 0 0 10" SelectedColor="{Binding Usuario.Color, Converter={StaticResource Conversor}}"  />
+        <xctk:ColorPicker Grid.Row="3" Grid.Column="1" Margin="0 0 0 10" SelectedColor="{Binding Usuario.Color, Converter={StaticResource CColor}}"  />
 
        
         <Button Grid.Row="4" Content="GUARDAR" Grid.Column="0" Command="{Binding AbrirListaDeSala}"  Grid.ColumnSpan="2" /> 

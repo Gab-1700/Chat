@@ -3,8 +3,13 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:conversores="clr-namespace:Chat.Cliente.Conversores"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
+        <UserControl.Resources>
+            <conversores:ConversorBrush x:Key="CBrush" />
+            <conversores:ConversorVisibility x:Key="CVisibility" />
+        </UserControl.Resources>
    
         <Grid >
           
@@ -17,8 +22,8 @@
 
                  <StackPanel Orientation="Horizontal"  >
                     <Label  Content="{Binding Sala.Nombre}" FontSize="20" Margin="0 0 400 0"  />
-                    <Button  Content="EDITAR" FontSize="20"  Margin="0 0 20 0" Background="White" Foreground="Black" Command="{Binding NavegacionACrearSalaDeChat}"/>
-                    <Button  Content="CERRAR" FontSize="20"  HorizontalAlignment="Right"  Background="RED" Foreground="White" Command="{Binding NavegacionAListaDeSalas}"/>
+                    <Button  Content="EDITAR" FontSize="20"  Margin="0 0 20 0" Background="White" Foreground="Black" Command="{Binding AbrirCrearSalaDeChat}"/>
+                    <Button  Content="CERRAR" FontSize="20"  HorizontalAlignment="Right"  Background="RED" Foreground="White" Command="{Binding AbrirListaDeSalas}"/>
                 </StackPanel>
                 
                 <TextBlock Text=" "/>
@@ -29,7 +34,7 @@
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="{Binding Usuario.Nombre}" Foreground="{Binding Usuario.Color}"  FontWeight="Bold" Margin="5" />
+                                    <TextBlock Text="{Binding Usuario.Nombre}" Foreground="{Binding Usuario.Color, Converter={StaticResource CBrush}}"  FontWeight="Bold" Margin="5" />
                                     <TextBlock Text="{Binding Texto}" Margin="5" />
                                     <TextBlock Text="{Binding Fecha}" Margin="5" />
                                 </StackPanel>
@@ -42,8 +47,8 @@
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Text="{Binding Imagen}" Margin="5" />
-                                    <TextBlock Text="{Binding Nombre}" Foreground="{Binding Color}" Margin="5"  FontWeight="Bold"/>
-                                    <TextBlock Text="(ADMIN)" Visibility="{Binding Host}" Margin ="5"/>
+                                    <TextBlock Text="{Binding Nombre}" Foreground="{Binding Color, Converter={StaticResource CBrush}}" Margin="5"  FontWeight="Bold"/>
+                                    <TextBlock Text="(ADMIN)" Visibility="{Binding EsAnfitrion, Converter={StaticResource CVisibility}}" Margin ="5"/>
                                 </StackPanel>
                             </DataTemplate>
                         </ListView.ItemTemplate>

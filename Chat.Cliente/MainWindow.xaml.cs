@@ -1,11 +1,7 @@
-﻿using System.Collections.ObjectModel;
-using System.Windows;
-using System.Windows.Input;
-using Chat.Modelo;
-using Chat.Vista;
-using Chat.VistaModelo;
+﻿using System.Windows;
+using Chat.Cliente.VistaModelo;
 
-namespace Chat;
+namespace Chat.Cliente;
 
 /// <summary>
 /// Interaction logic for MainWindow.xaml
@@ -14,10 +10,9 @@ namespace Chat;
 public partial class MainWindow : Window
 {
 
-    public MainWindow()
+    public MainWindow(MainWindowVM mainWindowVM)
     {
         InitializeComponent();  
-        DataContext = new MainWindowVM();   
-        
+        DataContext = mainWindowVM;   
     }
 }

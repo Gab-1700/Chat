@@ -2,15 +2,15 @@ using System.Globalization;
 using System.Windows.Data;
 using System.Windows.Media;
 
-namespace Chat.Conversores;
+namespace Chat.Cliente.Conversores;
 
-public class ConversorDeColor : IValueConverter
+public class ConversorColor : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-      if (value is SolidColorBrush brush)
+        if (value is string colorStr)
         {
-            return brush.Color;
+            return (Color)ColorConverter.ConvertFromString(colorStr);
         }
         else
         {
@@ -20,15 +20,13 @@ public class ConversorDeColor : IValueConverter
 
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
     {
-       
-         if (value is Color color)
+        if (value is Color color)
         {
-            return new SolidColorBrush(color);
+            return color.ToString();
         }
         else
         {
-            return Brushes.Black;
+            return "#000000";
         }
-
     }
 }

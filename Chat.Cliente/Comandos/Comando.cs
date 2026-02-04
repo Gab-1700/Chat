@@ -1,7 +1,7 @@
 using System.Windows;
 using System.Windows.Input;
 
-namespace Chat.VistaModelo;
+namespace Chat.Cliente.Comandos;
 
 public class Comando : ICommand
 {

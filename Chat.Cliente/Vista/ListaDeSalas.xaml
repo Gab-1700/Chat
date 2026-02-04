@@ -28,7 +28,7 @@
                                 <TextBlock Text="{Binding Nombre}" Margin="5" />
                                 <TextBlock Text="{Binding Capacidad}" Margin="5" />
                                 <TextBlock Text="{Binding Visibility}" Margin="5" />
-                                <Button Content="Unirse" Command="{Binding DataContext.AbrirSalaDeChat, ElementName=Salas}" CommandParameter="{Binding}" />
+                                <Button Content="Unirse" Command="{Binding DataContext.AbrirSalaDeChat, RelativeSource={RelativeSource AncestorType=ListView} }" CommandParameter="{Binding}" />
                             </StackPanel>
                         </DataTemplate>
                     </ListView.ItemTemplate>

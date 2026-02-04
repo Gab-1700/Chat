@@ -1,10 +1,12 @@
 using System.Windows.Controls;
+using Chat.Cliente.VistaModelo;
 
 namespace Chat.Vista;
 public partial class CrearSala : UserControl
 {
-    public CrearSala()
+    public CrearSala(CrearSalaVM crearSalaVM)
     {
         InitializeComponent();
+        DataContext = crearSalaVM;
     }
 }

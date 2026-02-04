@@ -1,6 +1,6 @@
 using System.ComponentModel;
 
-namespace Chat.VistaModelo;
+namespace Chat.Cliente.VistaModelo;
 
 public interface IVM : INotifyPropertyChanged
 {

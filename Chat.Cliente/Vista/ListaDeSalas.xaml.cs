@@ -1,12 +1,12 @@
 using System.Windows.Controls;
-using Chat.VistaModelo;
+using Chat.Cliente.VistaModelo;
 
 namespace Chat.Vista;
 public partial class ListaDeSalas : UserControl
 {
-    public ListaDeSalasVM listaDeSalasVM{get; set; }
-    public ListaDeSalas()
+    public ListaDeSalas(ListaDeSalasVM listaDeSalasVM)
     {
         InitializeComponent();
+        DataContext = listaDeSalasVM;
     }
 }

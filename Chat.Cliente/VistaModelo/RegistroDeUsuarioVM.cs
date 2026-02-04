@@ -1,22 +1,21 @@
 using System.Windows.Input;
 using System.Windows.Media;
-using Chat.Modelo;
+using Chat.Cliente.Comandos;
+using Chat.Base.Modelo;
 
-namespace Chat.VistaModelo;
+namespace Chat.Cliente.VistaModelo;
 
 public class RegistroDeUsuarioVM : BaseVM
 {
     public Usuario Usuario { get; set; }
-    public ICommand AbrirListaDeSala { get; set; }
+    public ICommand AbrirListaDeSala { get; private set; }
 
-    public RegistroDeUsuarioVM(ICommand abrirListaDeSala)
+    public RegistroDeUsuarioVM(AbrirListaDeSalas abrirListaDeSalas)
     {
-       // AbrirListaDeSala = abrirListaDeSala;
-        AbrirListaDeSala = new Comando( abrirListaDeSala.Execute,PuedesNavegar);
-        Usuario = new Usuario(){Color=Brushes.Black};
-        //Usuario.Color = Brushes.Black;
-
+        AbrirListaDeSala = new Comando(abrirListaDeSalas.Execute, PuedesNavegar);
+        Usuario = new Usuario() { Color = "#000000" };
     }
+
     public bool PuedesNavegar()
     {
         return !(Usuario.Nombre == null || Usuario.Nombre == "");
@@ -25,7 +24,8 @@ public class RegistroDeUsuarioVM : BaseVM
 
     }
 
-    public void CanExecute(object? objeto){
+    public void CanExecute(object? objeto)
+    {
         PuedesNavegar();
     }
 }
