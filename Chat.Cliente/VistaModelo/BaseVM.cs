@@ -2,7 +2,7 @@ using System.ComponentModel;
 
 namespace Chat.Cliente.VistaModelo;
 
-public abstract class BaseVM : IVM
+public abstract class BaseVM<TArgs> : IVM<TArgs>
 {
     public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -11,5 +11,8 @@ public abstract class BaseVM : IVM
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
-    public virtual void CargarModelo(object? modelo) { }
+    public virtual Task LoadAsync(TArgs? args)
+    {
+        return Task.CompletedTask;   
+    }
 }

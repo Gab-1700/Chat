@@ -2,8 +2,7 @@ using System.ComponentModel;
 
 namespace Chat.Cliente.VistaModelo;
 
-public interface IVM : INotifyPropertyChanged
+public interface IVM<TArgs> : INotifyPropertyChanged
 {
-    void CargarModelo(object? modelo);
-
+    Task LoadAsync(TArgs? args);
 }

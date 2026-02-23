@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Chat.Cliente.VistaModelo;
-public class MainWindowVM : BaseVM
+public class MainWindowVM : BaseVM<object>
 {
     private UserControl? _vistaActual;
     public UserControl? VistaActual
@@ -16,7 +16,6 @@ public class MainWindowVM : BaseVM
         set
         {
             _vistaActual = value;
-            //PropertyChanged.Invoke(this, new PropertyChangedEventArgs(nameof(VistaActual)));
             OnPropertyChanged(nameof(VistaActual));
         }
     }
@@ -27,17 +26,7 @@ public class MainWindowVM : BaseVM
         ConectarAlServidor(conexion);
 
     }
-    private void RecibirSala(string nombre)
-    {
-        //lambdda//nombre => MessageBox.Show(nombre)
-        //_listaDeSalas.AgregarSala(nombre);
-        // _listaDeSalas.listaDeSalasVM.AgregarSala(nombre);
-        //if (_listaDeSalas.DataContext is ListaDeSalasVM vm)
-        //{
-        //  vm.AgregarSala(nombre);
-
-        //}
-    }
+    
 
    private async void ConectarAlServidor(HubConnection conexion)
     {

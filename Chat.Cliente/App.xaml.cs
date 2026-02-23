@@ -1,11 +1,11 @@
-﻿using System.Windows;
-using System.Windows.Input;
-using Chat.Cliente.Comandos;
+﻿using System.Net.Http;
+using System.Windows;
 using Chat.Cliente.VistaModelo;
+using Chat.Services;
 using Chat.Vista;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Logging;
 
 namespace Chat.Cliente;
 
@@ -19,6 +19,12 @@ public partial class App : Application
         base.OnStartup(args);
 
         var servicios = new ServiceCollection();
+        servicios.AddLogging(configuracion =>
+        {
+            configuracion.ClearProviders();
+            configuracion.AddDebug();
+            configuracion.SetMinimumLevel(LogLevel.Debug);
+        });
 
         servicios.AddSingleton<MainWindowVM>();
         servicios.AddSingleton<RegistroDeUsuarioVM>();
@@ -32,14 +38,12 @@ public partial class App : Application
         servicios.AddSingleton<CrearSala>();
         servicios.AddSingleton<SalaDeChat>();
 
-        servicios.AddSingleton<AbrirRegistroDeUsuario>();
-        servicios.AddSingleton<AbrirListaDeSalas>();
-        servicios.AddSingleton<AbrirSalaDeChat>();
-        servicios.AddSingleton<AbrirCrearSala>();
+        servicios.AddSingleton<NavigationService>();
 
         servicios.AddSingleton(new HubConnectionBuilder()
-                 .WithUrl("http://localhost:5037/Chat")
+                 .WithUrl("http://localhost:5037/hubs/chat")
                  .Build());
+        servicios.AddSingleton(new HttpClient { BaseAddress = new Uri("http://localhost:5037/") });
 
         var proveedor = servicios.BuildServiceProvider();
         var mainWindow = proveedor.GetRequiredService<MainWindow>();        //dame la vista

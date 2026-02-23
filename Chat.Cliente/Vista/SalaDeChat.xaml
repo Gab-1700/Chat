@@ -22,7 +22,7 @@
 
                  <StackPanel Orientation="Horizontal"  >
                     <Label  Content="{Binding Sala.Nombre}" FontSize="20" Margin="0 0 400 0"  />
-                    <Button  Content="EDITAR" FontSize="20"  Margin="0 0 20 0" Background="White" Foreground="Black" Command="{Binding AbrirCrearSalaDeChat}"/>
+                    <Button  Content="EDITAR" FontSize="20"  Margin="0 0 20 0" Background="White" Foreground="Black" Command="{Binding AbrirCrearSala}"/>
                     <Button  Content="CERRAR" FontSize="20"  HorizontalAlignment="Right"  Background="RED" Foreground="White" Command="{Binding AbrirListaDeSalas}"/>
                 </StackPanel>
                 
@@ -30,7 +30,7 @@
 
              
              <StackPanel Orientation="Horizontal "> 
-                <ListView Width="500" Height="200" Margin="0 0 20 0" ItemsSource="{Binding Mensajes, Mode=TwoWay}">
+                <ListView Width="500" Height="200" Margin="0 0 20 0" ItemsSource="{Binding Mensajes}">
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
@@ -42,7 +42,7 @@
                         </ListView.ItemTemplate>
                 </ListView>
 
-                <ListView  Width="200" Height="200" ItemsSource="{Binding Usuarios, Mode=TwoWay}" >
+                <ListView  Width="200" Height="200" ItemsSource="{Binding Usuarios}" >
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
@@ -59,7 +59,7 @@
              <StackPanel Orientation="Horizontal">
                 <Border BorderBrush="black" BorderThickness="1" Height="50" Width="400" Margin ="0 0 20 5" HorizontalAlignment="Right" >
                     
-                        <TextBox Height="50" FontSize="20" Text ="{Binding MensajeTxt}" />
+                        <TextBox Height="50" FontSize="20" Text ="{Binding MensajeTxt,Mode=TwoWay}" />
                         
                     
                 </Border>

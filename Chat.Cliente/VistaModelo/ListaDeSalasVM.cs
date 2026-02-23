@@ -5,46 +5,56 @@ using Chat.Base.Modelo;
 using System.Collections.ObjectModel;
 using Chat.Cliente.Comandos;
 using Microsoft.AspNetCore.SignalR.Client;
+using System.Net.Http;
+using System.Net.Http.Json;
+using Chat.Services;
+using Chat.Vista;
 
 namespace Chat.Cliente.VistaModelo;
 
-public class ListaDeSalasVM : BaseVM
+public class ListaDeSalasVM : BaseVM<Usuario>
 {
-    public ObservableCollection<Sala> Salas { get; set; }
-    public Usuario Usuario { get; set; }
-    public ICommand AbrirSalaDeChat { get; private set; }
-    public ICommand AbrirCrearSalaDeChat { get; private set; }
-    public ICommand AbrirRegistroDeUsuario { get; private set; }
+    private HttpClient _httpClient;
+    private HubConnection _connection;
+    public ObservableCollection<Sala> Salas { get; }
+    public Usuario? Usuario { get; private set; }
+    public ICommand AbrirSalaDeChat { get; }
+    public ICommand AbrirCrearSalaDeChat { get; }
+    public ICommand AbrirRegistroDeUsuario { get; }
+    
+
 
     // algo por revisar
-    public ListaDeSalasVM(AbrirRegistroDeUsuario abrirRegistroDeUsuario, AbrirCrearSala abrirCrearSala, AbrirSalaDeChat abrirSalaDeChat, HubConnection conexion, RegistroDeUsuarioVM registroDeUsuarioVM)
+    public ListaDeSalasVM(HubConnection conexion, NavigationService navigationService, HttpClient httpClient)
     {
-        AbrirRegistroDeUsuario = abrirRegistroDeUsuario;
-        AbrirCrearSalaDeChat = abrirCrearSala;
-        AbrirSalaDeChat = new Comando((sala) =>
+        Salas = [];
+        _httpClient = httpClient;
+        _connection = conexion;
+        AbrirRegistroDeUsuario = new Comando(_ => navigationService.NavigateTo<RegistroDeUsuario>());
+        AbrirCrearSalaDeChat = new Comando(_ => navigationService.NavigateTo<CrearSala, Usuario>(Usuario));
+        AbrirSalaDeChat = new Comando(sala => navigationService.NavigateTo<SalaDeChat, (Usuario, Sala)>((Usuario, sala as Sala)));
+        _connection.On<Sala>("CrearSala", ActualizarSalas);
+    }
+
+    public override async Task LoadAsync(Usuario? usuario)
+    {
+        Usuario = usuario;
+        var salas = await _httpClient.GetFromJsonAsync<List<Sala>>("api/salas");
+        Salas.Clear();
+        foreach (var sala in salas!)
         {
-            conexion.InvokeAsync("UnirASala", (sala as Sala).Id, registroDeUsuarioVM.Usuario);
-            abrirSalaDeChat.Execute(sala);
-        });
-
-        Salas = new ObservableCollection<Sala>();
-        conexion.On<List<Sala>>("RecibirSala", ActualizarSalas);   // recibo la sala del servidor como string  y lo agrego ami lista de salas 
-
+            Salas.Add(sala);
+        }
+        await _connection.InvokeAsync("JoinListaSalas");
+         
     }
-
-    private void ActualizarSalas(List<Sala> salas)
+    private void ActualizarSalas(Sala sala)
     {
-        Application.Current.Dispatcher.Invoke(() =>
+        Application.Current.Dispatcher.InvokeAsync(() =>
         {
-            Salas.Clear();
-            salas.ForEach(s => Salas.Add(s));
+            Salas.Add(sala);
         });
     }
 
-    public void EnviarUsuario()
-    {
-
-
-    }
 
 }

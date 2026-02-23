@@ -4,81 +4,89 @@ using System.Windows.Input;
 using Chat.Cliente.Comandos;
 using Chat.Base.Modelo;
 using Microsoft.AspNetCore.SignalR.Client;
+using Chat.Services;
+using Chat.Vista;
+using System.Net.Http;
+using System.Net.Http.Json;
+using Microsoft.Extensions.Logging;
 
 namespace Chat.Cliente.VistaModelo;
 // namespace Chat.Base.Modelo;
-public class SalaDeChatVM : BaseVM
+public class SalaDeChatVM : BaseVM<(Usuario, Sala)>
 {
-
-    public ObservableCollection<Mensaje> Mensajes { get; set; }
-    public ObservableCollection<Usuario> Usuarios { get; set; }
-    public ICommand NavegacionACrearSalaDeChat { get; set; }
-    public ICommand NavegacionAListaDeSalas { get; set; }
-
-    public Usuario Usuario { get; set; }
-    public Sala Sala
+    private string _mensajeTxt;
+    private HttpClient _httpClient;
+    private HubConnection _connection;
+    public ObservableCollection<Mensaje> Mensajes { get; }
+    public ObservableCollection<Usuario> Usuarios { get; }
+    public ICommand AbrirCrearSala { get; }
+    public ICommand AbrirListaDeSalas { get; }
+    public ICommand EnviarMensaje { get; }
+    public Usuario Usuario { get; private set; }
+    public Sala Sala { get; private set; }
+    public string MensajeTxt
     {
-        get { return _sala; }
+        get => _mensajeTxt;
         set
         {
-            _sala = value;
-            OnPropertyChanged(nameof(Sala));
+            if (_mensajeTxt != value)
+            {
+                _mensajeTxt = value;
+                OnPropertyChanged(nameof(MensajeTxt));
+            }
         }
     }
-    private Sala _sala;
-    public ICommand AbriRegistroDeUsuario { get; private set; }
-    public ICommand AbrirListaDeSalas { get; private set; }
-    public ICommand AbrirCrearSalaDeChat { get; private set; }
-    public ICommand enviarMensaje { get; set; }
-    public string MensajeTxt { get; set; }
 
-    public SalaDeChatVM(AbrirRegistroDeUsuario abrirRegistroDeUsuario, AbrirCrearSala abrirCrearSala, AbrirListaDeSalas abrirListaDeSalas, RegistroDeUsuarioVM registroDeUsuarioVM, HubConnection conexion)
+
+    public SalaDeChatVM(HubConnection conexion, NavigationService navigationService, HttpClient httpClient,ILogger<SalaDeChatVM> logger)
     {
-        AbriRegistroDeUsuario = abrirRegistroDeUsuario;
-        AbrirCrearSalaDeChat = abrirCrearSala;
-        AbrirListaDeSalas = abrirListaDeSalas;
-        Mensajes = new ObservableCollection<Mensaje>();
-        Usuarios = new ObservableCollection<Usuario>();
-        AgregarUsuario(registroDeUsuarioVM.Usuario);
-        //aumente
-        //conexion.On<List<Sala>>("RecibirSala",ActualizarUsuario);   // recibo la sala del servidor como string  y lo agrego ami lista de salas 
-
-        enviarMensaje = new Comando(_ =>
+        Mensajes = [];
+        Usuarios = [];
+        _httpClient = httpClient;
+        _connection = conexion;
+        AbrirCrearSala = new Comando(_ => navigationService.NavigateTo<CrearSala, Usuario>(Usuario));
+        AbrirListaDeSalas = new Comando(_ => navigationService.NavigateTo<ListaDeSalas, Usuario>(Usuario));
+        EnviarMensaje = new Comando(async _ =>
         {
-            var mensaje = new Mensaje { Texto = MensajeTxt, Usuario = Usuario, Fecha = DateTime.Now };
-            Mensajes.Add(mensaje);
-            MensajeTxt = "";
+            try
+            {
+                var mensaje = new Mensaje { Texto = MensajeTxt, UsuarioId = Usuario.Id, Fecha = DateTime.Now };
+                await httpClient.PostAsJsonAsync($"api/salas/{Sala.Id}/mensajes", mensaje);
+
+                MensajeTxt = string.Empty;
+
+            }
+            catch (Exception ex)
+            {
+                logger.LogError($"Error en la solicitud: {ex}");
+            }
+
         });
 
-
-        conexion.On<int, Usuario>("UnirASala", (salaId, usuario) =>
+        conexion.On<Mensaje>("CrearMensaje", (mensaje) =>           //recibo del servidor 
         {
-
             Application.Current.Dispatcher.Invoke(() =>
             {
-                if (Sala.Id == salaId)
-                {
-                    Usuarios.Add(usuario);
-                }
+                Mensajes.Add(mensaje);
             });
         });
     }
 
-    public void AgregarUsuario(Usuario usuario)
+    public override async Task LoadAsync((Usuario, Sala) args)
     {
-        usuario.EsAnfitrion = Usuarios.Count == 0;
-        Usuarios.Add(usuario);
-    }
+        var (usuario, sala) = args;
+        Usuario = usuario;
+        Sala = sala;
 
-    public override void CargarModelo(object? modelo)
-    {
 
-        if (modelo is Sala sala)
+
+        Mensajes.Clear();
+        var mensajes = await _httpClient.GetFromJsonAsync<List<Mensaje>>($"api/salas/{Sala.Id}/mensajes");
+        foreach (var mensaje in mensajes!)
         {
-            Sala = sala;
-            //OnPropertyChanged(nameof(Sala));
+            Mensajes.Add(mensaje);
         }
-
+        await _connection.InvokeAsync("JoinSala", sala.Id, usuario.Id);
     }
 
 

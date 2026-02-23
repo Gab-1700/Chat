@@ -1,42 +1,39 @@
+using System.Dynamic;
+using System.Net.Http;
+using System.Net.Http.Json;
 using System.Windows.Input;
-using Chat.Cliente.Comandos;
 using Chat.Base.Modelo;
-using Microsoft.AspNetCore.SignalR.Client;
-using System.Windows;
+using Chat.Cliente.Comandos;
+using Chat.Services;
+using Chat.Vista;
 
 namespace Chat.Cliente.VistaModelo;
 
-public class CrearSalaVM : BaseVM
+public class CrearSalaVM : BaseVM<Usuario>
 {
-    public Sala Sala { get; set; }
+    public Usuario? Usuario { get; private set; }
+    public Sala Sala { get; }
+    public ICommand AbrirSalaDeChat { get; }
+    public ICommand AbrirListaDeSalas { get; }
 
-    public Usuario Usuario { get; set; }
-
-    public ICommand AbrirSalaDeChat { get; private set; }
-    public ICommand AbrirListaDeSalas { get; private set; }
-
-
-    public CrearSalaVM(AbrirListaDeSalas abrirListaDeSalas, AbrirSalaDeChat abrirSalaDeChat, HubConnection conexion)
+    public CrearSalaVM(NavigationService navigationService, HttpClient httpClient)
     {
-        // navegar = new Comando(_ => abriSalaDeChat.Execute(_),PuedesNavegar);
-        AbrirListaDeSalas = abrirListaDeSalas;
-        AbrirSalaDeChat = new Comando(_ =>
-        {
-            conexion.InvokeAsync("CargarSala", Sala);
-            abrirSalaDeChat.Execute(Sala);
-        }, PuedesNavegar);
-        Sala = new Sala();
-        conexion.On<int>("GuardarSalaId", (salaId) =>
-        {
-            Application.Current.Dispatcher.Invoke(() => Sala.Id = salaId);
-        });
-
+        Sala = new() { Nombre = "", AnfitrionId = Guid.Empty };
+        AbrirListaDeSalas = new Comando(_ => navigationService.NavigateTo<ListaDeSalas>());
+        AbrirSalaDeChat = new Comando(
+            async _ =>
+            {
+                await httpClient.PostAsJsonAsync("api/salas", Sala);
+                navigationService.NavigateTo<SalaDeChat, (Usuario, Sala)>((Usuario, Sala));
+            },
+            () => !string.IsNullOrEmpty(Sala.Nombre)
+        );
     }
 
-
-    public bool PuedesNavegar()
+    public override Task LoadAsync(Usuario? usuario)
     {
-        return !(Sala.Nombre == null || Sala.Nombre == "");
+        Usuario = usuario;
+        Sala.AnfitrionId = usuario.Id;
+        return Task.CompletedTask;
     }
-
 }

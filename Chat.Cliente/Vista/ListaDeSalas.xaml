@@ -20,7 +20,7 @@
                 <TextBlock Text=" "/>
 
                
-                <ListView ItemsSource="{Binding Salas, Mode=TwoWay}"  >
+                <ListView ItemsSource="{Binding Salas}"  >
                     
                     <ListView.ItemTemplate>
                         <DataTemplate>
