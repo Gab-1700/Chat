@@ -1,10 +1,7 @@
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
-using Chat.Cliente.Comandos;
 using Chat.Vista;
 using Microsoft.AspNetCore.SignalR.Client;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Chat.Cliente.VistaModelo;
 public class MainWindowVM : BaseVM<object>

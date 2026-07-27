@@ -1,12 +1,11 @@
-namespace Chat.Base.Modelo;
+namespace Chat.Base.DTO;
 
-public sealed class Mensaje
+public sealed class MensajeDto
 {
-    public Guid Id { get; set; } = Guid.NewGuid();
+    public Guid Id { get; set; } = Guid.Empty;
     public required string Texto { get; set; }
     public DateTimeOffset Fecha { get; set; } = DateTimeOffset.UtcNow;
     public Guid UsuarioId { get; set; }
-    public Usuario Usuario { get; set; } = null!;
+    public UsuarioDto Usuario { get; set; } = null!;
     public Guid SalaId { get; set; }
-    public Sala? Sala { get; set; }
 }

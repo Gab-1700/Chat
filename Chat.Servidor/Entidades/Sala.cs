@@ -1,8 +1,8 @@
-namespace Chat.Base.Modelo;
+namespace Chat.Servidor.Entidades;
 
 public sealed class Sala
 {
-    public Guid Id { get; set; } = Guid.NewGuid();
+    public Guid Id { get; set; } = Guid.Empty;
     public required string Nombre { get; set; }
     public int Capacidad { get; set; }
     public string? Contraseña { get; set; }
@@ -11,4 +11,3 @@ public sealed class Sala
     public List<Usuario> Usuarios { get; set; } = [];
     public List<Mensaje> Mensajes { get; set; } = [];
 }
-

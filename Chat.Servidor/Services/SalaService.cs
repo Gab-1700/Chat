@@ -1,5 +1,6 @@
-using Chat.Base.Modelo;
+using Chat.Base.DTO;
 using Chat.Servidor.Data;
+using Chat.Servidor.Entidades;
 using Chat.Servidor.Hubs;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
@@ -7,52 +8,59 @@ namespace Chat.Servidor.Services;
 
 public sealed class SalaService(ChatDbContext dbContext, IHubContext<ChatHub> hubContext, ILogger<SalaService> logger)
 {
-    public async Task<Sala> CreateSala(Sala sala)
+    public async Task<SalaDto> CreateSala(SalaDto salaDto)
     {
+        var sala = ToEntity(salaDto);
         dbContext.Salas.Add(sala);
         await dbContext.SaveChangesAsync();
         logger.LogInformation("Sala: '{SalaId}' creada correctamente", sala.Id);
 
+        salaDto.Id = sala.Id;
         await hubContext.Clients
             .Group("ListaSalas")
-            .SendAsync("CrearSala", sala);
+            .SendAsync("CrearSala", salaDto);
         logger.LogInformation("Grupo: 'ListaSalas' fue notificado correctamente");
 
-        return sala;
+        return salaDto;
     }
-    public async Task<List<Sala>> GetSalas()
+    public async Task<List<SalaDto>> GetSalas()
     {
         return await dbContext.Salas
             .AsNoTracking()
+            .Select(s => ToDto(s))
             .ToListAsync();
     }
-    public async Task<Sala?> GetSalaPorId(Guid id)
+
+    public async Task<SalaDto> GetSalaPorId(Guid id)
     {
         return await dbContext.Salas
             .AsNoTracking()
-            .Include(s => s.Anfitrion)
-            .FirstOrDefaultAsync(s => s.Id == id);
+            .Where(s => s.Id == id)
+            .Select(s => ToDto(s))
+            .FirstOrDefaultAsync()
+            ?? throw new KeyNotFoundException($"Sala: '{id}' no fue encontrada.");
     }
 
-    public async Task<Sala?> UpdateSala(Sala sala)
+    public async Task<SalaDto> UpdateSala(Guid salaId, SalaDto salaDto)
     {
-        var salaExistente = await dbContext.Salas
-            .FirstOrDefaultAsync(s => s.Id == sala.Id);
-        if (salaExistente is null)
-            return null;
+        var sala = await dbContext.Salas
+            .FirstOrDefaultAsync(s => s.Id == salaId)
+            ?? throw new KeyNotFoundException($"Sala: '{salaId}' no fue encontrada."); ;
 
-        dbContext.Entry(salaExistente)
-            .CurrentValues
-            .SetValues(sala);
+        sala.Nombre = salaDto.Nombre;
+        sala.Capacidad = salaDto.Capacidad;
+        sala.Contraseña = salaDto.Contraseña;
+        sala.AnfitrionId = salaDto.AnfitrionId;
         await dbContext.SaveChangesAsync();
-        logger.LogInformation("Sala: '{SalaId}' actualizada correctamente", sala.Id);
+        logger.LogInformation("Sala: '{SalaId}' actualizada correctamente", salaId);
 
+        salaDto.Id=salaId;
         await hubContext.Clients
             .Group("ListaSalas")
-            .SendAsync("ActualizarSala", salaExistente);
+            .SendAsync("ActualizarSala", salaDto);
         logger.LogInformation("Grupo: 'ListaSalas' fue notificado correctamente");
 
-        return salaExistente;
+        return salaDto;
     }
 
     public async Task<bool> DeleteSala(Guid id)
@@ -73,7 +81,7 @@ public sealed class SalaService(ChatDbContext dbContext, IHubContext<ChatHub> hu
         return true;
     }
 
-    public async Task JoinSala(Guid salaId, Guid usuarioId)
+    public async Task<UsuarioDto> JoinSala(Guid salaId, Guid usuarioId)
     {
         var usuario = await dbContext.Usuarios
             .FirstOrDefaultAsync(u => u.Id == usuarioId)
@@ -89,6 +97,7 @@ public sealed class SalaService(ChatDbContext dbContext, IHubContext<ChatHub> hu
 
         usuario.SalaId = sala.Id;
         await dbContext.SaveChangesAsync();
+        return new() {Id=usuario.Id,Nombre=usuario.Nombre,Color=usuario.Color};
     }
 
     public async Task LeaveSala(Guid salaId, Guid usuarioId)
@@ -101,8 +110,18 @@ public sealed class SalaService(ChatDbContext dbContext, IHubContext<ChatHub> hu
             .FirstOrDefaultAsync(s => s.Id == salaId)
             ?? throw new KeyNotFoundException($"No existe la sala con ID {salaId}.");
 
-        usuario.SalaId = Guid.Empty;
+        usuario.SalaId = null;
         await dbContext.SaveChangesAsync();
+    }
+
+    private Sala ToEntity(SalaDto salaDto)
+    {
+        return new() { Nombre = salaDto.Nombre, Capacidad = salaDto.Capacidad, Contraseña = salaDto.Contraseña, AnfitrionId = salaDto.AnfitrionId };
+    }
+
+    private static SalaDto ToDto(Sala sala)
+    {
+        return new() { Id = sala.Id, Nombre = sala.Nombre, Capacidad = sala.Capacidad, Contraseña = sala.Contraseña, AnfitrionId = sala.AnfitrionId };
     }
 }
 

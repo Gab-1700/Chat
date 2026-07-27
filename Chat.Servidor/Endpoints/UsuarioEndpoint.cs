@@ -1,4 +1,4 @@
-using Chat.Base.Modelo;
+using Chat.Base.DTO;
 using Chat.Servidor.Services;
 
 namespace Chat.Servidor.Endpoints;
@@ -12,18 +12,24 @@ public static class UsuarioEndpoint
             var group = routes.MapGroup("/api/usuarios")
                 .WithTags("Usuarios");
 
+            group.MapGet("/", GetUsuario);
             group.MapPost("/", CreateUsuario);
             group.MapPut("/{id}", UpdateUsuario);
             return group;
         }
     }
 
-    private static async Task<IResult> CreateUsuario(Usuario usuario, UsuarioService service)
+    private static async Task<IResult> GetUsuario(UsuarioService service)
+    {
+        return Results.Ok(await service.GetUsuarios());
+    }
+
+    private static async Task<IResult> CreateUsuario(UsuarioDto usuarioDto, UsuarioService service)
     {
         try
         {
-            await service.CreateUsuario(usuario);
-            return Results.Created($"/api/usuario/{usuario.Id}", usuario);
+            await service.CreateUsuario(usuarioDto);
+            return Results.Created($"/api/usuario/{usuarioDto.Id}", usuarioDto);
         }
         catch (ArgumentException ex)
         {
@@ -31,12 +37,11 @@ public static class UsuarioEndpoint
         }
     }
 
-    private static async Task<IResult> UpdateUsuario(Guid id, Usuario usuario, UsuarioService service)
+    private static async Task<IResult> UpdateUsuario(Guid id, UsuarioDto usuarioDto, UsuarioService service)
     {
         try
         {
-            usuario.Id = id;
-            return Results.Ok(await service.UpdateUsuario(usuario));
+            return Results.Ok(await service.UpdateUsuario(id,usuarioDto));
         }
         catch (ArgumentException ex)
         {

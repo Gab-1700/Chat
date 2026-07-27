@@ -1,40 +1,129 @@
+
 <UserControl x:Class="Chat.Vista.RegistroDeUsuario"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:conversores="clr-namespace:Chat.Cliente.Conversores"
-             mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             mc:Ignorable="d"
+             d:DesignHeight="450"
+             d:DesignWidth="500"
+             Background="#F5F7FA">
+
     <UserControl.Resources>
-         <conversores:ConversorColor x:Key="CColor" />
+        <conversores:ConversorColor x:Key="CColor"/>
+
+        <SolidColorBrush x:Key="ColorTexto" Color="#1F2937"/>
+        <SolidColorBrush x:Key="ColorSecundario" Color="#6B7280"/>
+        <SolidColorBrush x:Key="ColorBorde" Color="#E5E7EB"/>
+        <SolidColorBrush x:Key="ColorPrimario" Color="#4F46E5"/>
+
+        <Style TargetType="Label">
+            <Setter Property="Foreground"
+                    Value="{StaticResource ColorTexto}"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Padding" Value="0,0,0,8"/>
+            <Setter Property="VerticalContentAlignment"
+                    Value="Center"/>
+        </Style>
+
+        <Style TargetType="TextBox">
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="Padding" Value="12,10"/>
+            <Setter Property="BorderBrush"
+                    Value="{StaticResource ColorBorde}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="VerticalContentAlignment"
+                    Value="Center"/>
+        </Style>
+
+        <Style TargetType="Button">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Padding" Value="16,12"/>
+            <Setter Property="Background"
+                    Value="{StaticResource ColorPrimario}"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
     </UserControl.Resources>
-    <Grid Margin="50 30 50 30">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="2*" />
-            <RowDefinition />
-            <RowDefinition />
-            <RowDefinition />
-            <RowDefinition />
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition Width="3*"/>
-        </Grid.ColumnDefinitions>
 
-        <Label  Content="DEFINIR USUARIO" Grid.ColumnSpan="2" FontSize="30" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
-        <Label Grid.Row ="1" Grid.Column="0" Content="NOMBRE" FontSize="25" HorizontalContentAlignment="Left"  />       
-        <TextBox Grid.Row ="1" Grid.Column="1"  FontSize="30" Margin="0 0 0 10" Text="{Binding Usuario.Nombre}" />   
-        <Label Grid.Row ="2" Grid.Column="0" Content="AVATAR" FontSize="25" HorizontalContentAlignment="Left"  />  
-        <TextBox Grid.Row ="2" Grid.Column="1"  FontSize="25" Margin="0 0 0 10" />  
-        <Label Grid.Row ="3" Grid.Column="0" Content="COLOR" FontSize="25" HorizontalContentAlignment="Left"  />  
-        <xctk:ColorPicker Grid.Row="3" Grid.Column="1" Margin="0 0 0 10" SelectedColor="{Binding Usuario.Color, Converter={StaticResource CColor}}"  />
+    <Grid Margin="24">
+        <Border Background="White"
+                BorderBrush="{StaticResource ColorBorde}"
+                BorderThickness="1"
+                CornerRadius="12"
+                Padding="28"
+                MaxWidth="440"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center">
 
-       
-        <Button Grid.Row="4" Content="GUARDAR" Grid.Column="0" Command="{Binding AbrirListaDeSala}"  Grid.ColumnSpan="2" /> 
-        
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
 
+                <!-- Encabezado -->
+                <StackPanel Grid.Row="0" Margin="0,0,0,28">
+                    <TextBlock Text="Crear usuario"
+                               FontSize="24"
+                               FontWeight="Bold"
+                               Foreground="{StaticResource ColorTexto}"/>
+
+                    <TextBlock Text="Configura tu nombre y el color que te identificará en el chat."
+                               FontSize="13"
+                               Foreground="{StaticResource ColorSecundario}"
+                               TextWrapping="Wrap"
+                               Margin="0,8,0,0"/>
+                </StackPanel>
+
+                <!-- Nombre -->
+                <StackPanel Grid.Row="1" Margin="0,0,0,20">
+                    <Label Content="Nombre de usuario"/>
+
+                    <TextBox Text="{Binding Usuario.Nombre,
+                                            Mode=TwoWay,
+                                            UpdateSourceTrigger=PropertyChanged}"
+                             MaxLength="40"/>
+                </StackPanel>
+
+                <!-- Color -->
+                <StackPanel Grid.Row="2" Margin="0,0,0,28">
+                    <Label Content="Color identificativo"/>
+
+                    <xctk:ColorPicker
+                        SelectedColor="{Binding Usuario.Color,
+                                                Converter={StaticResource CColor},
+                                                Mode=TwoWay,
+                                                UpdateSourceTrigger=PropertyChanged}"
+                        ShowRecentColors="True"
+                        UsingAlphaChannel="False"
+                        HorizontalAlignment="Stretch"
+                        Height="38"/>
+                </StackPanel>
+
+                <!-- Guardar -->
+                <Button Grid.Row="3"
+                        Content="Guardar y continuar"
+                        Command="{Binding AbrirListaDeSala}"
+                        HorizontalAlignment="Stretch"/>
+
+                <TextBlock Grid.Row="4"
+                           Text="Tu color se utilizará para identificarte en los mensajes."
+                           FontSize="12"
+                           Foreground="{StaticResource ColorSecundario}"
+                           TextWrapping="Wrap"
+                           TextAlignment="Center"
+                           Margin="0,16,0,0"/>
+            </Grid>
+        </Border>
     </Grid>
-
 </UserControl>

@@ -1,5 +1,4 @@
-using System;
-using Chat.Base.Modelo;
+using Chat.Servidor.Entidades;
 using Microsoft.EntityFrameworkCore;
 namespace Chat.Servidor.Data;
 
@@ -14,6 +13,8 @@ public class ChatDbContext(DbContextOptions<ChatDbContext> options) : DbContext(
         modelBuilder.Entity<Sala>(entity =>
         {
             entity.HasKey(s => s.Id);
+            entity.Property(s => s.Id)
+                .ValueGeneratedOnAdd();
 
             entity.Property(s => s.Nombre)
                 .IsRequired();
@@ -25,11 +26,6 @@ public class ChatDbContext(DbContextOptions<ChatDbContext> options) : DbContext(
                 .HasForeignKey<Sala>(s => s.AnfitrionId)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
-
-            /*entity.HasMany(s => s.Usuarios)
-                .WithOne(u => u.Sala)
-                .HasForeignKey(u => u.SalaId)
-                .OnDelete(DeleteBehavior.Cascade);*/
 
             entity.HasMany(s => s.Usuarios)
                .WithOne(u => u.Sala)
@@ -46,6 +42,8 @@ public class ChatDbContext(DbContextOptions<ChatDbContext> options) : DbContext(
         modelBuilder.Entity<Usuario>(entity =>
         {
             entity.HasKey(u => u.Id);
+            entity.Property(u => u.Id)
+                .ValueGeneratedOnAdd();
 
             entity.Property(u => u.Nombre)
                 .IsRequired();
@@ -62,6 +60,8 @@ public class ChatDbContext(DbContextOptions<ChatDbContext> options) : DbContext(
         modelBuilder.Entity<Mensaje>(entity =>
         {
             entity.HasKey(m => m.Id);
+            entity.Property(m => m.Id)
+                .ValueGeneratedOnAdd();
 
             entity.Property(m => m.Texto)
                 .IsRequired();

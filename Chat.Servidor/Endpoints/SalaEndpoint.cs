@@ -1,4 +1,4 @@
-using Chat.Base.Modelo;
+using Chat.Base.DTO;
 using Chat.Servidor.Services;
 
 namespace Chat.Servidor.Endpoints;
@@ -19,13 +19,14 @@ public static class SalaEndpoint
             group.MapPut("/{id}", UpdateSala);
             group.MapDelete("/{id}", DeleteSala);
 
-            group.MapGet("/{id}/mensajes", GetMensajes);
-            group.MapPost("/{id}/mensajes", CreateMensaje);
+            group.MapGet("/{salaId}/mensajes", GetMensajesPorSala);
+            group.MapPost("/{salaId}/mensajes", CreateMensajePorSala);
+
+            group.MapGet("/{salaId}/usuarios", GetUsuariosPorSala);
 
             return group;
         }
     }
-
 
     private static async Task<IResult> GetSalas(SalaService service)
     {
@@ -44,12 +45,12 @@ public static class SalaEndpoint
         }
     }
 
-    private static async Task<IResult> CreateSala(Sala sala, SalaService service)
+    private static async Task<IResult> CreateSala(SalaDto salaDto, SalaService service)
     {
         try
         {
-            await service.CreateSala(sala);
-            return Results.Created($"/api/salas/{sala.Id}", sala);
+            await service.CreateSala(salaDto);
+            return Results.Created($"/api/salas/{salaDto.Id}", salaDto);
         }
         catch (Exception ex)
         {
@@ -57,12 +58,11 @@ public static class SalaEndpoint
         }
     }
 
-    private static async Task<IResult> UpdateSala(Guid id, Sala sala, SalaService service)
+    private static async Task<IResult> UpdateSala(Guid id, SalaDto salaDto, SalaService service)
     {
         try
         {
-            sala.Id=id;
-            return Results.Ok(await service.UpdateSala(sala));
+            return Results.Ok(await service.UpdateSala(id,salaDto));
         }
         catch (Exception ex)
         {
@@ -79,21 +79,27 @@ public static class SalaEndpoint
     }
 
 
-    private static async Task<IResult> GetMensajes(Guid id, MensajeService service)
+    private static async Task<IResult> GetMensajesPorSala(Guid salaId, MensajeService service)
     {
-        return Results.Ok(await service.GetMensajesPorSala(id));
+        return Results.Ok(await service.GetMensajesPorSala(salaId));
     }
 
-    private static async Task<IResult> CreateMensaje(Guid id, Mensaje mensaje, MensajeService service)
+
+    private static async Task<IResult> CreateMensajePorSala(Guid salaId, MensajeDto mensajeDto, MensajeService service)
     {
         try
         {
-            await service.CrearMensaje(id, mensaje);
-            return Results.Created($"/api/salas/{id}/mensajes/{mensaje.Id}", mensaje);
+            await service.CrearMensajePorSala(salaId, mensajeDto);
+            return Results.Created($"/api/salas/{salaId}/mensajes/{mensajeDto.Id}", mensajeDto);
         }
         catch (Exception ex)
         {
             return Results.NotFound(new { error = ex.Message });
         }
+    }
+
+    private static async Task<IResult> GetUsuariosPorSala(Guid salaId, UsuarioService service)
+    {
+        return Results.Ok(await service.GetUsuariosPorSala(salaId));
     }
 }

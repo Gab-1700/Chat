@@ -5,7 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Chat.Cliente"
         mc:Ignorable="d"
-        Title="MainWindow" Height="500" Width="800">
+        Title="MainWindow"
+        Width="800"
+        Height="650"
+        MinWidth="700"
+        MinHeight="600"
+        WindowStartupLocation="CenterScreen">
+
 
         <Grid Margin="10">
             <ContentControl Content="{Binding VistaActual, Mode=TwoWay}" />
